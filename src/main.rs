@@ -1,5 +1,6 @@
 extern crate actix_web;
 
+use actix_cors::Cors;
 use actix_rt::System;
 use actix_web::{web, App, Error, HttpRequest, HttpResponse, HttpServer};
 use futures::{future::ok, Future};
@@ -164,6 +165,7 @@ fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .wrap(Cors::new().allowed_methods(vec!["GET", "POST"]))
             .data(data.clone())
             .service(web::resource("/chat.html").to_async(chat))
             .service(web::resource("/connect/{user}").to_async(connect_user))
